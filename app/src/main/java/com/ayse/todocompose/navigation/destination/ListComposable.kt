@@ -9,7 +9,7 @@ import com.ayse.todocompose.util.Constants.LIST_ARGUMENT_KEY
 import com.ayse.todocompose.util.Constants.LIST_SCREEN
 
 fun NavGraphBuilder.listComposable(
-    navigateToTaskScreen: (Int) -> Unit
+    navigateToTaskScreen: (taskID: Int) -> Unit
 ) {
     composable(
         route = LIST_SCREEN,
