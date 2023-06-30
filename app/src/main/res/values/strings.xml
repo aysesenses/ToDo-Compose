@@ -4,4 +4,8 @@
     <string name="search_action">Search Tasks</string>
     <string name="sort_action">Sort Tasks</string>
     <string name="delete_all_action">Delete All</string>
+    <string name="list_screen_title">Tasks</string>
+    <string name="search_place_holder">Search</string>
+    <string name="search_icon">Search Icon</string>
+    <string name="close_icon">Close Icon</string>
 </resources>
