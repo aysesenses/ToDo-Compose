@@ -2,6 +2,8 @@ package com.ayse.todocompose.ui.screens.list
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
@@ -16,24 +18,50 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.ayse.todocompose.data.ToDoTask
 import com.ayse.todocompose.data.models.Priority
 import com.ayse.todocompose.ui.theme.*
+import com.ayse.todocompose.util.RequestState
+
+
+@ExperimentalMaterialApi
+@Composable
+fun ListContent(
+    tasks: RequestState<List<ToDoTask>>,
+    navigateToTaskScreen: (taskID: Int) -> Unit
+) {
+   if (tasks is RequestState.Success){
+       if (tasks.data.isEmpty()) {
+           EmptyContent()
+       } else {
+           DisplayTasks(tasks = tasks.data, navigateToTaskScreen = navigateToTaskScreen)
+       }
+   }
+}
 
 @Composable
-fun ListContent() {
-
+fun DisplayTasks(
+    tasks: List<ToDoTask>, navigateToTaskScreen: (taskID: Int) -> Unit
+) {
+    LazyColumn {
+        items(
+            items = tasks,
+            key = { task -> task.id }
+        ) { task ->
+            TaskItem(toDoTask = task, navigateToTaskScreen = navigateToTaskScreen)
+        }
+    }
 }
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun TaskItem(
     toDoTask: ToDoTask,
-    navigationToTaskScreen: (taskId: Int) -> Unit
+    navigateToTaskScreen: (taskId: Int) -> Unit
 ) {
     Surface(modifier = Modifier.fillMaxWidth(),
         color = MaterialTheme.colors.taskItemBackgroundColor,
         shape = RectangleShape,
         elevation = TASK_ITEM_ELEVATION,
         onClick = {
-            navigationToTaskScreen(toDoTask.id)
+            navigateToTaskScreen(toDoTask.id)
         }) {
         Column(
             modifier = Modifier
@@ -57,10 +85,7 @@ fun TaskItem(
                 ) {
                     Canvas(
                         modifier = Modifier
-                            .width(PRIORITY_INDICATOR_SIZE)
-                            .height(
-                                PRIORITY_INDICATOR_SIZE
-                            )
+                            .size(PRIORITY_INDICATOR_SIZE)
                     ) {
                         drawCircle(
                             color = toDoTask.priority.color
@@ -88,5 +113,5 @@ fun PreviewTaskItem() {
         title = "Title",
         description = "new descriptıonn",
         priority = Priority.HIGH
-    ), navigationToTaskScreen = {})
+    ), navigateToTaskScreen = {})
 }
