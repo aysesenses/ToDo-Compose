@@ -9,5 +9,7 @@
     <string name="search_icon">Search Icon</string>
     <string name="close_icon">Close Icon</string>
     <string name="sad_face_icon">Sad Face Icon</string>
-    <string name="empty_content">No Text Found</string>
+    <string name="empty_content">No Task Found</string>
+    <string name="add_task">Add Task</string>
+    <string name="back_arrow">Back Arrow</string>
 </resources>

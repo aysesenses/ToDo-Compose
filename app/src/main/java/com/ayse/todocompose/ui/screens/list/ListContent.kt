@@ -31,7 +31,9 @@ fun ListContent(
        if (tasks.data.isEmpty()) {
            EmptyContent()
        } else {
-           DisplayTasks(tasks = tasks.data, navigateToTaskScreen = navigateToTaskScreen)
+           DisplayTasks(
+               tasks = tasks.data,
+               navigateToTaskScreen = navigateToTaskScreen)
        }
    }
 }
