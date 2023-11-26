@@ -76,4 +76,8 @@ class SharedViewModel @Inject constructor(
             title.value = newTitle
         }
     }
+
+    fun validateFields(): Boolean{
+        return title.value.isNotEmpty() && description.value.isNotEmpty()
+    }
 }
