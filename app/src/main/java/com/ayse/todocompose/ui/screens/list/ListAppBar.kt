@@ -27,6 +27,7 @@ import com.ayse.todocompose.ui.theme.Typography
 import com.ayse.todocompose.ui.theme.topAppBarBackgroundColor
 import com.ayse.todocompose.ui.theme.topAppBarContentColor
 import com.ayse.todocompose.ui.viewModel.SharedViewModel
+import com.ayse.todocompose.util.Action
 import com.ayse.todocompose.util.SearchAppBarState
 import com.ayse.todocompose.util.TrailingIconState
 
@@ -43,7 +44,9 @@ fun ListAppBar(
                     sharedViewModel.searchAppBarState.value = SearchAppBarState.OPENED
                 },
                 onSortClicked = {},
-                onDeleteClicked = {}
+                onDeleteAllClicked = {
+                    sharedViewModel.action.value = Action.DELETE_ALL
+                }
             )
         }
 
@@ -57,7 +60,9 @@ fun ListAppBar(
                     sharedViewModel.searchAppBarState.value = SearchAppBarState.CLOSED
                     sharedViewModel.searchTextState.value = ""
                 },
-                onSearchClicked = {},
+                onSearchClicked = {
+                    sharedViewModel.searchDatabase(searchQuery = it)
+                },
             )
         }
     }
@@ -67,7 +72,7 @@ fun ListAppBar(
 fun DefaultListAppBar(
     onSearchClicked: () -> Unit,
     onSortClicked: (Priority) -> Unit,
-    onDeleteClicked: () -> Unit,
+    onDeleteAllClicked: () -> Unit,
 
     ) {
     TopAppBar(
@@ -82,7 +87,7 @@ fun DefaultListAppBar(
             ListAppBarAction(
                 onSearchClicked = onSearchClicked,
                 onSortClicked = onSortClicked,
-                onDeleteClicked = onDeleteClicked
+                onDeleteAllClicked = onDeleteAllClicked
             )
         }
     )
@@ -92,11 +97,11 @@ fun DefaultListAppBar(
 fun ListAppBarAction(
     onSearchClicked: () -> Unit,
     onSortClicked: (Priority) -> Unit,
-    onDeleteClicked: () -> Unit,
+    onDeleteAllClicked: () -> Unit,
 ) {
     SearchAction( onSearchClicked = onSearchClicked)
     SortAction(onSortClicked = onSortClicked)
-    DeleteAllAction (onDeleteClicked = onDeleteClicked)
+    DeleteAllAction (onDeleteAllClicked = onDeleteAllClicked)
 }
 
 @Composable
@@ -145,7 +150,7 @@ fun SortAction(
 
 @Composable
 fun DeleteAllAction(
-    onDeleteClicked: () -> Unit
+    onDeleteAllClicked: () -> Unit
 ) {
     var expended by remember { mutableStateOf(false) }
 
@@ -161,7 +166,7 @@ fun DeleteAllAction(
         ) {
             DropdownMenuItem(onClick = {
                 expended = false
-                onDeleteClicked()
+                onDeleteAllClicked()
             }) {
                 Text(
                     text = stringResource(R.string.delete_all_action),
@@ -269,7 +274,7 @@ private fun DefaultListAppBarPreview() {
     DefaultListAppBar(
         onSearchClicked = {},
         onSortClicked = {},
-        onDeleteClicked = {}
+        onDeleteAllClicked = {}
     )
 }
 

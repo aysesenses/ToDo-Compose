@@ -19,23 +19,49 @@ import com.ayse.todocompose.data.ToDoTask
 import com.ayse.todocompose.data.models.Priority
 import com.ayse.todocompose.ui.theme.*
 import com.ayse.todocompose.util.RequestState
+import com.ayse.todocompose.util.SearchAppBarState
 
 
 @ExperimentalMaterialApi
 @Composable
 fun ListContent(
-    tasks: RequestState<List<ToDoTask>>,
+    allTasks: RequestState<List<ToDoTask>>,
+    searchedTasks: RequestState<List<ToDoTask>>,
+    searchAppBarState: SearchAppBarState,
     navigateToTaskScreen: (taskID: Int) -> Unit
 ) {
-   if (tasks is RequestState.Success){
-       if (tasks.data.isEmpty()) {
-           EmptyContent()
-       } else {
-           DisplayTasks(
-               tasks = tasks.data,
-               navigateToTaskScreen = navigateToTaskScreen)
-       }
-   }
+    if (searchAppBarState == SearchAppBarState.TRIGGERED) {
+
+        if (searchedTasks is RequestState.Success) {
+            HandleListContent(
+                tasks = searchedTasks.data,
+                navigateToTaskScreen = navigateToTaskScreen
+            )
+        }
+    } else {
+        if (allTasks is RequestState.Success) {
+            HandleListContent(
+                tasks = allTasks.data,
+                navigateToTaskScreen = navigateToTaskScreen
+            )
+        }
+    }
+}
+
+@Composable
+fun HandleListContent(
+    tasks: List<ToDoTask>,
+    navigateToTaskScreen: (taskID: Int) -> Unit,
+) {
+    if (tasks.isEmpty()) {
+        EmptyContent()
+    } else {
+        DisplayTasks(
+            tasks = tasks,
+            navigateToTaskScreen = navigateToTaskScreen
+        )
+    }
+
 }
 
 @Composable
@@ -113,7 +139,7 @@ fun PreviewTaskItem() {
     TaskItem(toDoTask = ToDoTask(
         id = 1,
         title = "Title",
-        description = "new descriptıonn",
+        description = "new description",
         priority = Priority.HIGH
     ), navigateToTaskScreen = {})
 }
