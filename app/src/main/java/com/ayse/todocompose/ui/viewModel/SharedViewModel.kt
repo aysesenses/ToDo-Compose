@@ -1,7 +1,6 @@
 package com.ayse.todocompose.ui.viewModel
 
 import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.isTraceInProgress
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -16,9 +15,10 @@ import com.ayse.todocompose.util.SearchAppBarState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -46,7 +46,21 @@ class SharedViewModel @Inject constructor(
     val allTask: StateFlow<RequestState<List<ToDoTask>>> = _allTasks
 
     private val _sortState = MutableStateFlow<RequestState<Priority>>(RequestState.Idle)
-    private val sortState: StateFlow<RequestState<Priority>> = _sortState
+    val sortState: StateFlow<RequestState<Priority>> = _sortState
+
+    val lowPriorityTasks: StateFlow<List<ToDoTask>> =
+        repository.sortByLowPriority.stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(),
+            emptyList()
+        )
+
+    val highPriorityTasks: StateFlow<List<ToDoTask>> =
+        repository.sortByHighPriority.stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(),
+            emptyList()
+        )
 
     fun readSortState() {
         _sortState.value = RequestState.Loading
@@ -63,7 +77,7 @@ class SharedViewModel @Inject constructor(
         }
     }
 
-    fun persistSortingState(priority: Priority) {
+    fun persistSortState(priority: Priority) {
         viewModelScope.launch(Dispatchers.IO) {
             dataStoreRepository.persistSortState(priority = priority)
         }
