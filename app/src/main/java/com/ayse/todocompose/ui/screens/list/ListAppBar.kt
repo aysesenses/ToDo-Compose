@@ -30,7 +30,6 @@ import com.ayse.todocompose.ui.theme.topAppBarContentColor
 import com.ayse.todocompose.ui.viewModel.SharedViewModel
 import com.ayse.todocompose.util.Action
 import com.ayse.todocompose.util.SearchAppBarState
-import com.ayse.todocompose.util.TrailingIconState
 
 @Composable
 fun ListAppBar(
@@ -202,10 +201,6 @@ fun SearchAppBar(
     onCloseClicked: () -> Unit,
     onSearchClicked: (String) -> Unit
 ) {
-    var trailingIconState by remember {
-        mutableStateOf(TrailingIconState.READY_TO_DELETE)
-    }
-
     Surface(
         modifier = Modifier
             .fillMaxWidth()
@@ -242,22 +237,13 @@ fun SearchAppBar(
                 }
             },
             trailingIcon = {
-                IconButton(onClick = {
-                    when (trailingIconState) {
-                        TrailingIconState.READY_TO_DELETE -> {
-                            onTextChange("")
-                            trailingIconState = TrailingIconState.READY_TO_CLOSE
+                IconButton(
+                    onClick = {
+                        when {
+                            text.isNotEmpty() -> onTextChange("")
+                            else -> onCloseClicked()
                         }
-                        TrailingIconState.READY_TO_CLOSE -> {
-                            if (text.isNotEmpty()) {
-                                onTextChange("")
-                            } else {
-                                onCloseClicked()
-                                trailingIconState = TrailingIconState.READY_TO_DELETE
-                            }
-                        }
-                    }
-                } ) {
+                    }) {
                     Icon(
                         imageVector = Icons.Filled.Close,
                         contentDescription = stringResource(R.string.close_icon),
