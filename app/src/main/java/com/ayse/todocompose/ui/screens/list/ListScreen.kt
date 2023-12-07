@@ -20,7 +20,6 @@ import com.ayse.todocompose.util.Action
 import com.ayse.todocompose.util.SearchAppBarState
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterialApi::class)
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun ListScreen(
