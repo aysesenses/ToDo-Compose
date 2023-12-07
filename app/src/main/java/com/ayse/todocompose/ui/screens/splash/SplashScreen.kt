@@ -24,6 +24,7 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.ayse.todocompose.R
 import com.ayse.todocompose.ui.theme.LOGO_HEIGHT
@@ -59,6 +60,12 @@ fun SplashScreen(
         navigateToListScreen()
     }
 
+}
+@Composable
+fun Splash(
+    offSetState: Dp,
+    alphaState: Float
+) {
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -89,7 +96,7 @@ fun getLogo(): Int {
 @Preview(uiMode = UI_MODE_NIGHT_YES)
 fun PreviewSplashScreen(
 ){
-    SplashScreen(navigateToListScreen = {})
+    Splash(offSetState = 0.dp, alphaState = 1f )
 }
 
 @Composable
@@ -97,6 +104,6 @@ fun PreviewSplashScreen(
 fun PreviewSplashScreen2(
 ){
     ToDoComposeTheme(darkTheme = true) {
-        SplashScreen(navigateToListScreen = {})
+        Splash(offSetState = 0.dp, alphaState = 1f )
     }
 }
