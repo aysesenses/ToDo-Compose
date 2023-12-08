@@ -18,6 +18,7 @@ import com.ayse.todocompose.ui.theme.fabBackgroundColor
 import com.ayse.todocompose.ui.viewModel.SharedViewModel
 import com.ayse.todocompose.util.Action
 import com.ayse.todocompose.util.SearchAppBarState
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
@@ -114,15 +115,18 @@ fun DisplaySnackbar(
     LaunchedEffect(key1 = action) {
         if (action != Action.NO_ACTION) {
             scope.launch {
-                val snackbarResult = scaffoldState.snackbarHostState.showSnackbar(
+                val snackBarResult = scaffoldState.snackbarHostState.showSnackbar(
                     message = setMessage(action = action, taskTitle = taskTitle),
                     actionLabel = setActionLabel(action = action)
                 )
-                undoDeletedTask(
-                    action = action,
-                    snackbarResult = snackbarResult,
-                    undoClicked = onUndoClicked
-                )
+                if (snackBarResult == SnackbarResult.ActionPerformed
+                    && action == Action.DELETE
+                ) {
+                    onUndoClicked(Action.UNDO)
+                } else if (snackBarResult == SnackbarResult.Dismissed || action != Action.DELETE) {
+                    onComplete(Action.NO_ACTION)
+                }
+
             }
             onComplete(Action.NO_ACTION)
         }
@@ -145,12 +149,3 @@ private fun setActionLabel(action: Action): String {
     }
 }
 
-private fun undoDeletedTask (
-    action: Action,
-    snackbarResult: SnackbarResult,
-    undoClicked : (Action) -> Unit
-){
-    if (snackbarResult == SnackbarResult.ActionPerformed && action == Action.DELETE) {
-        undoClicked(Action.UNDO)
-    }
-}
