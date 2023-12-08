@@ -65,7 +65,6 @@ dependencies {
 
 
     //Compose Navigation
-
     implementation("androidx.navigation:navigation-compose:$nav_version")
 
     //DAGGER HILT
@@ -79,4 +78,7 @@ dependencies {
     implementation("androidx.room:room-runtime:$room_version")
     kapt("androidx.room:room-compiler:$room_version")
     implementation("androidx.room:room-ktx:$room_version")
+
+    //SPLASH
+    implementation("androidx.core:core-splashscreen:1.0.0")
 }
